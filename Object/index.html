@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trang Chủ</title>
+    <link rel="stylesheet" href="./css/home.css" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+      
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <style>
+      /* Add responsive design */
+      @media (max-width: 768px) {
+        .Header .container {
+          flex-direction: column;
+          text-align: center;
+        }
+        .Header .col-lg-8,
+        .Header .col-lg-2 {
+          margin-bottom: 15px;
+        }
+        .category {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .category .sub-cate {
+          flex: 1 0 100%;
+          margin-bottom: 15px;
+        }
+      }
+
+      /* Basic styling for accessibility */
+      img.nav {
+        alt: "Navigation Icon";
+      }
+      img.img-center {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div id="app">
+      <div class="Header">
+        <div class="container d-flex align-items-center justify-content-between">
+            <!-- menu -->
+                <div id="menu" class="d-none d-lg-flex align-items-center ">
+                  <a href="./index.html" class="menu-items-link">Trang chủ</a>
+                  <a href="./Shop/introduce.html" class="menu-items-link"
+                    >Giới thiệu</a>
+                  <li class="menu-items-link">
+                    <a href="./Shop/sanpham.html">Sản Phẩm</a>
+                    <ul class="sub_menu">
+                      <li><a href="./Shop/carbonate.html">Carbonated Drinks</a></li>
+                      <li><a href="./Shop/chivas.html">Chivas</a></li>
+                      <li><a href="./Shop/beer.html">Beer</a></li>
+                    </ul>
+                  </li>
+                  <a href="./Shop/contact.html" class="menu-items-link">Liên Hệ</a>
+                  <a href="./Shop/checkin.html" class="menu-items-link"
+                    >Kiểm tra đơn hàng</a>
+                </div>
+        <!--  -->
+        <div class="logo">
+          <!-- <img src="logo.png" alt="" height="50"> -->
+           <a href="./Shop/contact.html">
+            e_rav3n_ & _csownn_</a>
+        </div>
+        <!-- navigation -->
+              <div class="navigation d-flex align-items-center">
+                <div>
+                  <a href="#">
+                    <i class="fa-solid fa-magnifying-glass nav"></i>
+                  </a>
+                </div>
+                <div class="user">
+                  <a href="#"><i class="fa-solid fa-user nav"></i></a>
+                  <ul class="sub-user">
+                    <li><a href="./Shop/login.html">Đăng nhập</a></li>
+                    <li><a href="./Shop/register.html">Đăng ký</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <a href="#"><i class="fa-solid fa-heart nav"></i></a>
+                </div>
+
+                <div>
+                  <a href="./Shop/cart.html"><i class="fa-solid fa-bag-shopping nav"></i></a>
+                  <span class="cart-count">{{ cartItems.length }}</span>
+                </i></a>
+                <!-- Popup hiển thị sản phẩm khi hover vào giỏ hàng -->
+                 <div class="cart-popup" v-if="showCart">
+                    <div v-for="(item, index) in cartItems" :key="item.id" class="cart-item">
+                      <img :src="item.image" alt="Ảnh sản phẩm" class="product-image" />
+                        <div class="product-info">
+                          <h4>{{ item.name }}</h4>
+                          <p>{{ item.description }}</p>
+                          <span>{{ item.price }} Đ</span>
+                        </div>
+                    </div>
+                    <!-- Thông báo hoặc nút Thanh toán -->
+                          <div v-if="cartItems.length === 0" class="empty-cart">
+                            Không có sản phẩm nào trong giỏ hàng
+                          </div>
+                    <a v-else class="view-cart" href="#">Thanh toán</a>
+                 </div>
+                </div>
+              </div>
+        </div>
+      </div>
+      <!-- Thanh tìm kiếm -->
+
+      <!-- Slider -->
+      <div class="container">
+        <div class="slider">
+          <div id="img">
+            <img
+              :src="images[currentImage]"
+              alt="Slideshow Image"
+              class="img-center"
+              style="height: 500px"
+            />
+            <div class="dot-container">
+              <span
+                v-for="(image, index) in images"
+                :key="index"
+                class="dot"
+                :class="{ active: index === currentImage }"
+                @click="setImage(index)"
+              ></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--  -->
+
+      <!-- category/ danh mục -->
+      <div class="category container">
+        <div v-for="item in items" class="sub-cate">
+          <img :src="item.image" :alt="item.title" />
+          <h3 class="pt-2">{{ item.title }}</h3>
+          <p style="text-align: justify">{{ item.content }}</p>
+        </div>
+      </div>
+      <!--  -->
+      <!-- introduce/ giới thiệu -->
+      <div class="introduce container" style="background-color: #f5f5f5">
+        <div class="row d-flex">
+          <div class="col-md-5 p-0">
+            <div v-for="greet in greeting">
+              <img :src="greet.img" alt="Introduce Image" class="img-intro" />
+            </div>
+          </div>
+          <div class="col-md-7 pt-5">
+            <div v-for="greet in greeting">
+              <h1 style="text-align: center">{{greet.title}}</h1>
+              <p
+                style="
+                  letter-spacing: 0.1em;
+                  text-align: justify;
+                  padding-top: 10px;
+                "
+              >
+                {{greet.content}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--Hàng bán chạy  -->
+      <div class="best-sell container py-5">
+        <div class="title-best-seller d-flex">
+          <h2>SẢN PHẨM BÁN CHẠY</h2>
+        </div>
+        <div class="best-seller">
+          <div
+            v-for="bseller in bestseller"
+            :key="bseller.id"
+            class="frame border"
+            >
+            <div class="product-frame">
+              <img :src="bseller.image" :alt="bseller.name" />
+            </div>
+            <div class="product-info pt-3">
+              <div class="name-box">
+                <h4>{{bseller.name}}</h4>
+              </div>
+              <div class="price-box">
+                <span>{{bseller.price}}</span>
+              </div>
+              <div
+                class="box-icon d-flex justify-content-center align-items-center"
+              >
+                <div class="sub-box d-flex">
+                  <div class="icon">
+                    <button type="submit" href="" class="btn right-to" @click="addToCart(bseller)"><i class="fa-solid fa-cart-shopping"></i></button>
+                  </div>
+                  <div class="icon">
+                    <a href="" class="btn right-to">
+                      <i class="fa-regular fa-eye"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--  -->
+
+      <!--  -->
+      <div class="introo container col-md-12">
+        <div class="row d-flex">
+          <div class="col-md-8" style="padding: 10%">
+            <div v-for="intro in introo">
+              <h3>
+                <a
+                  href="shop.html"
+                  style="text-decoration: none; color: rgb(0, 0, 0)"
+                  >{{intro.title}}</a
+                >
+              </h3>
+              <p>
+                <a
+                  href="first-order.html"
+                  style="text-decoration: none; color: black; font-size: 35px"
+                  >{{intro.content}}</a
+                >
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div v-for="intro in introo">
+              <img
+                :src="intro.img"
+                alt="Cartoon Man with Beer"
+                class="img-intro"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--  -->
+
+      <!-- Footer -->
+      <div class="footer">
+        <div class="container">
+          <div class="row d-flex pt-5">
+            <div class="col-lg-3">
+              <div class="block-footer">
+                <div class="contact">Địa chỉ: Nam Từ Liêm, Hà Nội</div>
+                <div class="contact">
+                  SĐT:
+                  <a href="tel:0985605615" class="link">0985605615</a>
+                </div>
+                <div class="contact">
+                  <span>
+                    Email:
+                    <a class="link" href="mailto:contact.20musicsl@gmail.com"
+                      >Contact.20musicsl@gmail.com</a
+                    >
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-9">
+              <div class="row d-flex">
+                <div class="col-lg-4">
+                  <div class="footerr">
+                    <h3 class="ft-title">CHÍNH SÁCH</h3>
+                    <ul class="list-menu">
+                      <li class="li-menu">
+                        <a href="./index.html" class="link">Trang chủ</a>
+                      </li>
+                      <li class="li-menu">
+                        <a href="./Shop/introduce.html" class="link">Giới thiệu</a>
+                      </li>
+                      <li class="li-menu">
+                        <a href="./Shop/sanpham.html" class="link">Sản phẩm</a>
+                      </li>
+                      <li class="li-menu">
+                        <a href="./Shop/contact.html" class="link">Liên hệ</a>
+                      </li>
+                      <li class="li-menu">
+                        <a href="./Shop/checkin.html" class="link">Kiểm tra</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="toggle">
+                    <h3 class="tog-title">HỖ TRỢ KHÁCH HÀNG</h3>
+                    <ul class="list-menu">
+                      <li class="li-menu">
+                        <a href="#" class="link">Tìm kiếm</a>
+                      </li>
+                      <li class="li-menu">
+                        <a href="#" class="link"
+                          >Chính sách bảo mật</a
+                        >
+                      </li>
+                      <li class="li-menu">
+                        <a href="$" class="link"
+                          >Điều khoản dịch vụ</a
+                        >
+                      </li>
+                      <li class="li-menu">
+                        <a href="#" class="link"
+                          >Hướng dẫn kiểm tra đơn hàng</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="lh">
+                    <h3 class="lh-title">LIÊN HỆ VỚI CHÚNG TÔI</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--  -->
+      <div class="bq">
+        <h6 class="txt">&copy; Bản quyền thuộc về @HHT/CNTT/WEB/K-14/NHOM4</h6>
+      </div>
+    </div>
+    <script src="js/app.js"></script>
+  </body>
+</html>
